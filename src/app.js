@@ -17,6 +17,7 @@ const PORT = 8080;
 const app = express();
 const httpServer = createServer(app);
 const io = new Server(httpServer);
+module.exports.io = io;
 UserManager.rutaDatos = "./data/usuarios.json";
 
 

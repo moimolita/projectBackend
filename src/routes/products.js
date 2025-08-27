@@ -2,6 +2,7 @@
 const express = require("express");
 const router = express.Router();
 const { ProductManager } = require("../dao/ProductManager");
+const { io } = require("../app");
 
 ProductManager.rutaDatos = "./src/data/products.json";
 
@@ -25,6 +26,9 @@ router.post("/", async (req, res) => {
         return res.status(400).json({ error: "Faltan campos obligatorios" });
     }
     const nuevo = await ProductManager.addProduct({ title, description, code, price, status, stock, category, thumbnails: thumbnails || [] });
+    // Emitir actualización a todos los clientes
+    const productos = await ProductManager.getProducts();
+    io.emit("updateProducts", productos);
     res.status(201).json(nuevo);
 });
 
@@ -39,6 +43,9 @@ router.put("/:pid", async (req, res) => {
 router.delete("/:pid", async (req, res) => {
     const eliminado = await ProductManager.deleteProduct(req.params.pid);
     if (!eliminado) return res.status(404).json({ error: "Producto no encontrado" });
+    // Emitir actualización a todos los clientes
+    const productos = await ProductManager.getProducts();
+    io.emit("updateProducts", productos);
     res.json({ status: "ok" });
 });
 
