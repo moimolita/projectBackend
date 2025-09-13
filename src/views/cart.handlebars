@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Carrito</title>
+</head>
+<body>
+    <h1>Carrito</h1>
+    <ul>
+        {{#each products}}
+            <li>
+                {{this.product.title}} - ${{this.product.price}} x {{this.quantity}}
+                <form action="/api/carts/{{../cartId}}/products/{{this.product._id}}?_method=DELETE" method="POST" style="display:inline">
+                    <button type="submit">Eliminar</button>
+                </form>
+            </li>
+        {{/each}}
+    </ul>
+    <a href="/products">Seguir comprando</a>
+</body>
+</html>
